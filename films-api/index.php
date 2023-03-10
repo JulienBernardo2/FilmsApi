@@ -35,9 +35,13 @@ $app->get('/', [InfoController::class, 'handleGetInfo']);
 $app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
 $app->get('/films/{film_id}', [FilmsController::class, 'handleGetSingleFilm']);
 $app->post('/films', [FilmsController::class, 'handleCreateFilms']);
+$app->put('/films', [FilmsController::class, 'handleUpdateFilms']);
+$app->delete('/films', [FilmsController::class, 'handleDeleteFilms']);
 
 $app->get('/customers', [CustomersController::class, 'handleGetAllCustomers']);
 $app->get('/customers/{customer_id}/films', [CustomersController::class, 'handleGetAllCustomerFilms']);
+$app->put('/customers', [CustomersController::class, 'handleUpdateCustomers']);
+$app->delete('/customers/{customer_id}', [CustomersController::class, 'handleDeleteCustomer']);
 
 $app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllCategoryFilms']);
 

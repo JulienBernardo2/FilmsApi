@@ -64,7 +64,38 @@ class FilmsController extends Validator
             //Pass the actor element to the model
             $this->film_model->createFilm($films);
         };
+
+        $response->getBody()->write("Films were created");
             
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-Type", "application/json");
+    }
+
+    public function handleUpdateFilms(Request $request, Response $response)
+    {
+        //Retrieve the data from the request body
+        $films_data = $request->getParsedBody();
+        $films_columns = array_keys($films_data);
+        
+        //insert the new actors in the DB
+        foreach($films_data as $films)
+        {
+            $this->film_model->updateFilm($films, $films_columns);
+        };
+
+        $response->getBody()->write("Films were updated");
+            
+        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-Type", "application/json");
+    }
+
+    public function handleDeleteFilms(Request $request, Response $response)
+    {
+        $film_ids = $request->getParsedBody();
+        $film_ids_string = implode(",", $film_ids);
+
+        $this->film_model->deleteFilms($film_ids_string);
+
+        $response->getBody()->write("Films " .$film_ids_string. " was deleted");
+
+        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-Type", "application/json");
     }
 }

@@ -301,11 +301,12 @@ class BaseModel
      * Delete record by id
      * 
      * @param  string $table table name
+     * @param  string $column name of column
      * @param  integer $id id of record
      */
-    protected function deleteById($table, $id)
+    protected function deleteById($table, $column, $id)
     {
-        $stmt = $this->run("DELETE FROM $table WHERE id = ?", [$id]);
+        $stmt = $this->run("DELETE FROM $table WHERE $column = ?", [$id]);
 
         return $stmt->rowCount();
     }

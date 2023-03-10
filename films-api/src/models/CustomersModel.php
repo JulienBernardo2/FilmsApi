@@ -105,4 +105,14 @@ class CustomersModel extends BaseModel
 
         return $this->run($sql, [":customer_id"=> $customer_id])->fetch();
     }
+
+    public function updateCustomer(array $customer, array $columns)
+    {
+        return $this->update('customer', $customer, $columns);
+    }
+
+    public function deleteCustomer(int $customer_id)
+    {
+        return $this->deleteById('customer', 'customer_id', $customer_id);
+    }
 }

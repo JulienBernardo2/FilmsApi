@@ -10,19 +10,19 @@ class UnsupportedOperationsMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, RequestHandler $handler): ResponseInterface
     {   
-        $response = $handler->handle($request);
+        $method = $request->getMethod();
+        $allowed_methods = explode(",", $request->getHeaderLine("Allow"));  
         
-        if($response->getStatusCode() == "405")
+        if(!in_array($method, $allowed_methods))
         {
-            $accepted_methods = $response->getHeaderLine("Allow");
-            
             $response= new \Slim\Psr7\Response();
-            $error_data = ['status code' => '405' , 'message' => 'Unsupported Method' , 'description' => 'Method not allowed. Must be one of the following methods ' . $accepted_methods];
+            $error_data = ['status code' => '405' , 'message' => 'Unsupported Method' , 'description' => 'Method not allowed. Must be one of the following methods ' . implode(",", $allowed_methods)];
             $response->getBody()->write(json_encode($error_data));
             $response = $response->withStatus(405);
             return $response;
         }
-        
+
+        $response = $handler->handle($request);        
         return $response;
     }
 }

@@ -25,7 +25,6 @@ class ContentNegotiationMiddleware implements MiddlewareInterface
             // $response = $response->withStatus(406);
             // return $response;
         }
-
         $response = $handler->handle($request);
         return $response;
     }

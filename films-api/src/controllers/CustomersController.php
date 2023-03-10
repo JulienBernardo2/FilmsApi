@@ -1,5 +1,7 @@
 <?php
 namespace Vanier\Api\Controllers;
+
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -44,5 +46,33 @@ class CustomersController
         $response->getBody()->write($json_data);
 
         return $response->withStatus(200)->withHeader("Content-Type", "application/json");
+    }
+
+    public function handleUpdateCustomers(Request $request, Response $response)
+    {
+        //Retrieve the data from the request body
+        $customers_data = $request->getParsedBody();
+        $customers_columns = array_keys($customers_data);
+        
+        //insert the new actors in the DB
+        foreach($customers_data as $customers)
+        {
+            $this->customers_model->updateCustomer($customers, $customers_columns);
+        };
+
+        $response->getBody()->write("Films were updated");
+            
+        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-Type", "application/json");
+    }
+
+    public function handleDeleteCustomer(Request $request, Response $response, array $uri_args)
+    {
+        $customer_id = $uri_args['customer_id'];
+        
+        $this->customers_model->deleteCustomer($customer_id);
+
+        $response->getBody()->write("Customer " . $customer_id . " was deleted");
+
+        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-Type", "application/json");
     }
 }

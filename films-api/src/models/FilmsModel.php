@@ -76,4 +76,14 @@ class FilmsModel extends BaseModel
     {
         return $this->insert('film', $film);
     }
+
+    public function updateFilm(array $film, array $columns)
+    {
+        return $this->update('film', $film, $columns);
+    }
+
+    public function deleteFilms(string $film_ids)
+    {
+        return $this->deleteByIds('film', 'film_id', $film_ids);
+    }
 }
