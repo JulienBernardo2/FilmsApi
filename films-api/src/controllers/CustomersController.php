@@ -52,15 +52,14 @@ class CustomersController
     {
         //Retrieve the data from the request body
         $customers_data = $request->getParsedBody();
-        $customers_columns = array_keys($customers_data);
         
         //insert the new actors in the DB
         foreach($customers_data as $customers)
         {
-            $this->customers_model->updateCustomer($customers, $customers_columns);
+            $this->customers_model->updateCustomer($customers, $customers["customer_id"]);
         };
 
-        $response->getBody()->write("Films were updated");
+        $response->getBody()->write("Customers were updated");
             
         return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-Type", "application/json");
     }

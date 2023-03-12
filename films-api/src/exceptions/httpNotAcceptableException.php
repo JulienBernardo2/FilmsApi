@@ -13,8 +13,7 @@ class HttpNotAcceptableException extends HttpSpecializedException
     /**
      * @var string
      */
-    protected $message = 'Not Acceptable.';
+    protected $message = 'The content type is not accepted by this server';
 
-    protected $title = '406 Not Acceptable';
-    protected $description = 'The server cannot produce a response matching the list of acceptable content types';
+    protected $title = "406 - Not Acceptable";
 }

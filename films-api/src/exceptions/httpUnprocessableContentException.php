@@ -15,5 +15,6 @@ class httpUnprocessableContentException extends HttpSpecializedException
      */
     protected $message = 'The server was unable to process the contained instructions';
 
-    protected $title = '422 Unprocessable content';
+    protected $title = '422 - Unprocessable Content';
+
 }
