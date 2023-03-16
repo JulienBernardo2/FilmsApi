@@ -186,6 +186,15 @@ class Validator
     }
 
     /**
+     * Validate that value is not null
+     *
+     * @param  string $field
+     * @param  mixed  $value
+     * @param  array  $params
+     * @return bool
+     */
+
+    /**
      * Validate that two values match
      *
      * @param  string $field
@@ -199,6 +208,8 @@ class Validator
         list($field2Value, $multiple) = $this->getPart($this->_fields, explode('.', $params[0]));
         return isset($field2Value) && $value == $field2Value;
     }
+
+    
 
     /**
      * Validate that a field is different from another field
@@ -263,7 +274,7 @@ class Validator
      * @param  array $params
      * @return bool
      */
-    protected function validateInteger($value)
+    protected function validateInteger($field, $value)
     {
         return preg_match('/^([0-9]|-[1-9]|-?[1-9][0-9]*)$/i', $value);
     }
@@ -700,9 +711,9 @@ class Validator
      * @param  mixed $value
      * @return bool
      */
-    protected function validateAlpha($value)
+    protected function validateAlpha($field, $value)
     {
-        return preg_match('/^([a-z])+$/i', $value);
+        return preg_match('/^[a-zA-Z\s\-]+$/', $value);
     }
 
     /**
@@ -804,7 +815,7 @@ class Validator
      * @return bool
      */
     protected function validateDateAfter($field, $value, $params)
-    {
+    {  
         $vtime = ($value instanceof \DateTime) ? $value->getTimestamp() : strtotime($value);
         $ptime = ($params[0] instanceof \DateTime) ? $params[0]->getTimestamp() : strtotime($params[0]);
 
@@ -959,7 +970,7 @@ class Validator
      * @param array $fields full list of data to be validated
      * @return bool
      */
-    protected function validateRequiredWith($field, $value, $params, $fields)
+        protected function validateRequiredWith($field, $value, $params, $fields)
     {
         $conditionallyReq = false;
         // if we actually have conditionally required with fields to check against
@@ -1249,7 +1260,7 @@ class Validator
      * @return bool
      */
     public function validate()
-    {
+    {   
         $set_to_break = false;
         foreach ($this->_validations as $v) {
             foreach ($v['fields'] as $field) {
@@ -1285,7 +1296,7 @@ class Validator
                         break;
                     }
                 }
-            }
+            }   
             if ($set_to_break) {
                 break;
             }
@@ -1377,6 +1388,7 @@ class Validator
      */
     public static function addRule($name, $callback, $message = null)
     {
+        
         if ($message === null) {
             $message = static::ERROR_DEFAULT;
         }
@@ -1580,7 +1592,7 @@ class Validator
     public function mapFieldRules($field, $rules)
     {
         $me = $this;
-
+        
         array_map(function ($rule) use ($field, $me) {
 
             //rule must be an array
@@ -1614,11 +1626,13 @@ class Validator
         array_map(function ($field) use ($rules, $me) {
             $me->mapFieldRules($field, $rules[$field]);
         }, array_keys($rules));
+
+        
     }
 
     private function isAssociativeArray($input)
     {
-        //array contains at least one key that's not an can not be cast to an integer
+        //ar`ray contains at least one key that's not an can not be cast to an integer
         return count(array_filter(array_keys($input), 'is_string')) > 0;
     }
 }

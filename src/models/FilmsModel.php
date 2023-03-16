@@ -72,14 +72,22 @@ class FilmsModel extends BaseModel
         return $this->run($sql, [":film_id"=> $film_id])->fetch();
     }
 
+    public function getAllFilmIds()
+    {
+        $sql = "SELECT film_id
+                    FROM film";
+
+        return $this->run($sql)->fetchAll();
+    }
+
     public function createFilm(array $film)
     {
         return $this->insert('film', $film);
     }
 
-    public function updateFilm(array $film, array $columns)
+    public function updateFilm(array $film, int $film_id)
     {
-        return $this->update('film', $film, $columns);
+        return $this->update('film', $film, ["film_id" => "$film_id"]);
     }
 
     public function deleteFilms(string $film_ids)

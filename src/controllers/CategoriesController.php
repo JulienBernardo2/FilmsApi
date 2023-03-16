@@ -6,9 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Vanier\Api\Exceptions\HttpNoContentException;
 use Vanier\Api\Exceptions\HttpNotFoundException;
-use Vanier\Api\Exceptions\httpUnprocessableContentException;
 use Vanier\Api\models\CategoriesModel;
-use Vanier\Api\Validation\Validator;
 
 /**
  * Controller for Categories
@@ -23,7 +21,7 @@ class CategoriesController extends BaseController
     /**
      * CategoriesController constructor.
      *
-     * Initializes the `CategoriesModel` and `Validator` instances.
+     * Initializes the `CategoriesModel` instances.
     */
     public function __construct() 
     {
@@ -35,11 +33,10 @@ class CategoriesController extends BaseController
      *
      * @param Request $request The request object.
      * @param  Response $response The response object.
-     * @param array $uri_args The uri arguments.
+     * @param array $uri_args The uri arguments (category_id).
      *
      * @throws HttpNotFoundException If the category ID does not exist or is not a numerical value.
-     * @throws HttpUnprocessableContentException If the filters are not valid.
-     * @throws HttpNoContentException If there are no Films from this category.
+     * @throws HttpNoContentException If there are no Films from this category that have the values of the filters.
      *
      * @return Response The response object with the list of films for the category.
     */
@@ -55,33 +52,35 @@ class CategoriesController extends BaseController
             throw new HttpNotFoundException($request, "The category ID  must be a numerical value");
         }
 
+        // Define the allowed filter keys
+        $filters_allowed = ['length', 'rating', 'page', 'page_size'];
+
+        //Checks if the filter keys are proper, if not throws an UnprocessableContent error
+        $this->checkKeysFilter($filters, $filters_allowed, $request);
+
         //Defines the validation rules for the filters
         $rules = array(
             'length' => [
-                'numeric',
-                ['min', 1]
+                'integer',
+                ['min', 1],
+                ['max', 10000]
             ],
-            'page' => [
-                'numeric',
+            'page' => [ 
+                'integer',
                 ['min', 1]
             ],
             'page_size' => [
-                'numeric',
-                ['min', 1]
+                'integer',
+                ['min', 1],
+                ['max', 50]
             ],
             'rating'=> [
-                ['in', ['G', 'PG', 'R', 'NC-17', 'PG-13']] 
+                ['in', ['G', 'PG', 'R', 'NC-17', 'PG-13']]
             ]
         );
 
-        //Validates the filters from the rules above
-        $validator = new Validator($filters, []);
-        $validator->mapFieldsRules($rules);
-        
-        if (!$validator->validate()) {
-            $errors = $validator->errorsToString();
-            throw new httpUnprocessableContentException($request, $errors); 
-        }
+        //Checks if the rules are respected, if not throws an UnprocessableContent error
+        $this->validateRules($filters, $rules, $request);
 
         //Sets the pagination options and if they are not specified, sets the defaults to page 1 and page_size 10
         $this->categories_model->setPaginationOptions($filters["page"] ?? 1, $filters["page_size"] ?? 10);
@@ -97,9 +96,9 @@ class CategoriesController extends BaseController
 
             $category_data["film"] = $this->categories_model->getCategoryFilms($category_id, $filters);
 
-            if($category_data["film"] == null)
+            if($category_data["film"]['data'] == null)
             {
-                throw new HttpNoContentException($request, "There are no Films in this category");
+                throw new HttpNoContentException($request);
             }
         }
 

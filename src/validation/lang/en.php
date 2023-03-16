@@ -1,6 +1,7 @@
 <?php
 
 return array(
+    'notEmpty'       => "must have a value",
     'required'       => "is required",
     'equals'         => "must be the same as '%s'",
     'different'      => "must be different than '%s'",

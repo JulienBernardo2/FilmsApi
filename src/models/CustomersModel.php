@@ -53,7 +53,7 @@ class CustomersModel extends BaseModel
     {
         $query_values = [];
 
-        $sql = "SELECT film.*, category.name AS category_name, rental.rental_date, rental.return_date
+        $sql = "SELECT film.*, category.name AS category_name, rental.rental_date
                     FROM customer
                     JOIN rental ON customer.customer_id = rental.customer_id
                     JOIN inventory ON inventory.inventory_id = rental.inventory_id
@@ -62,16 +62,16 @@ class CustomersModel extends BaseModel
                     JOIN category ON category.category_id = film_category.category_id
                     WHERE 1";
 
-        if(isset($filters['rental_date']))
+        if(isset($filters['fromRentalDate']))
         {
             $sql .= " AND rental.rental_date >= :rental_date ";
-            $query_values[":rental_date"] = $filters['rental_date'];
+            $query_values[":rental_date"] = $filters['fromRentalDate'];
         }
 
-        if(isset($filters['return_date']))
+        if(isset($filters['toRentalDate']))
         {
             $sql .= " AND rental.return_date <= :return_date ";
-            $query_values[":return_date"] = $filters['return_date'];
+            $query_values[":return_date"] = $filters['toRentalDate'];
         }
 
         if(isset($filters['rating']))
@@ -95,6 +95,14 @@ class CustomersModel extends BaseModel
         $sql .= " AND customer.customer_id = :customer_id ORDER BY film.film_id";
 
         return $this->paginate($sql, [":customer_id"=> $customer_id] + $query_values);
+    }
+
+    public function getAllCustomerIds()
+    {
+        $sql = "SELECT customer_id
+                    FROM customer";
+
+        return $this->run($sql)->fetchAll();
     }
 
     public function getCustomerById(int $customer_id)
