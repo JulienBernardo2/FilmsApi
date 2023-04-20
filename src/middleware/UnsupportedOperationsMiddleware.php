@@ -28,7 +28,10 @@ class UnsupportedOperationsMiddleware implements MiddlewareInterface
         $allowed_methods = ['films'=> ['GET', 'POST', 'PUT', 'DELETE'],
                             'customers' => ['GET', 'PUT', 'DELETE'],
                             'categories' => ['GET'],
-                            'actors' => ['GET', 'POST']
+                            'actors' => ['GET', 'POST'],
+                            'distance' => ['POST'],
+                            '' => ['GET'],
+                            'languages' => ['GET']
                             ];
 
         //Gets the uri path
@@ -39,7 +42,7 @@ class UnsupportedOperationsMiddleware implements MiddlewareInterface
 
         //Gets the resource that is intended for this method
         $resource = $uri_parts[2];
-        
+
         //If the method is not in the allowed resources than an error is thrown
         if(!in_array($method, $allowed_methods[$resource]))
         {

@@ -36,7 +36,7 @@ class FilmsController extends BaseController
             'page_size' => [
                 'integer',
                 ['min', 1],
-                ['max', 50]
+                ['max', 100]
             ],
             'description' => [
                 'alpha'
@@ -60,9 +60,13 @@ class FilmsController extends BaseController
 
         $this->film_model->setPaginationOptions($filters["page"] ?? 1, $filters["page_size"] ?? 10);
 
-        $films_data = $this->film_model->getAll($filters = $request->getQueryParams());
+        $films_data['films'] = $this->film_model->getAll($filters = $request->getQueryParams());
+
+        $tvmaze_controller = new TVMazeController();
+        $shows = $tvmaze_controller->handleGetAllShows();
+        $films_data["TVMaze_shows"] = $shows;
         
-        if($films_data['data'] == null)
+        if($films_data['films'] == null)
         {
             throw new HttpNoContentException($request);
         } 

@@ -27,7 +27,7 @@ class ActorsModel extends BaseModel
             $sql .= " AND last_name LIKE CONCAT('%', :last_name, '%') ";
             $query_values[":last_name"] = $filters['last_name'];
         }
-
+        
         return $this->paginate($sql, $query_values);
     }
 

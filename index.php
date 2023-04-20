@@ -5,6 +5,8 @@ use Vanier\Api\Controllers\CustomersController;
 use Vanier\Api\Controllers\ActorsController;
 use Vanier\Api\Controllers\InfoController;
 use Vanier\Api\Controllers\CategoriesController;
+use Vanier\Api\Controllers\DistanceController;
+use Vanier\Api\Controllers\LanguagesController;
 use Vanier\Api\Middleware\ContentNegotiationMiddleware;
 use Vanier\Api\Middleware\UnsupportedOperationsMiddleware;
 
@@ -17,7 +19,7 @@ require_once __DIR__ . '/src/config/app_config.php';
 $app = AppFactory::create();
 
 //-- Step 2) Add routing middleware.
-$app->add(new ContentNegotiationMiddleware());
+//$app->add(new ContentNegotiationMiddleware());
 $app->addBodyParsingMiddleware();
 
 //-- Step 3) Add error handling middleware.
@@ -43,11 +45,16 @@ $app->get('/customers/{customer_id}/films', [CustomersController::class, 'handle
 $app->put('/customers', [CustomersController::class, 'handleUpdateCustomers']);
 $app->delete('/customers/{customer_id}', [CustomersController::class, 'handleDeleteCustomer']);
 
+$app->get('/categories', [CategoriesController::class, 'handleGetAllCategory']);
 $app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllCategoryFilms']);
 
 $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
 $app->get('/actors/{actor_id}/films', [ActorsController::class, 'handleGetAllActorFilms']);
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
+
+$app->post('/distance', [DistanceController::class, 'handleGetDistance']);
+
+$app->get('/languages', [LanguagesController::class, 'handleGetAllLanguages']);
 
 //-- Step 5)
 // Here we include the file that contains the application routes. 

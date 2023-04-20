@@ -50,6 +50,9 @@ class ActorsController extends BaseController
         //Checks if the filter keys are proper, if not throws an UnprocessableContent error
         $this->checkKeysFilter($filters, $filters_allowed, $request);
 
+        //Sets the pagination options and if they are not specified, sets the defaults to page 1 and page_size 10
+        $this->actors_model->setPaginationOptions($filters["page"] ?? 1, $filters["page_size"] ?? 10);
+
         //Defines the validation rules for the filters
         $rules = array(
             'first_name' => [
@@ -80,13 +83,10 @@ class ActorsController extends BaseController
         {
             throw new HttpNoContentException($request);
         }   
-
-        //Sets the pagination options and if they are not specified, sets the defaults to page 1 and page_size 10
-        $this->actors_model->setPaginationOptions($filters["page"] ?? 1, $filters["page_size"] ?? 10);
         
         //Prepares the response with the list of actors
         $response = $this->prepareResponse($response, $actors_data, StatusCodeInterface::STATUS_OK);
-        return $response;
+        return $response;   
     }
 
     /**

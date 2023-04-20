@@ -110,6 +110,19 @@ class BaseController
         }
     }
 
+    protected function checkColumnsDistance(array $data, array $desiredKeys, Request $request)
+    {
+        foreach (array_keys($data) as $column) {
+            if (!in_array($column, $desiredKeys)) {
+                throw new httpUnprocessableContentException($request, "Invalid column: $column");
+            }
+
+            else if (empty($data[$column])) {
+                throw new httpUnprocessableContentException($request, "Column '$column' value cannot be empty");
+            }
+        }
+    }
+
     /**
      * Validates an array of data against rules
      *

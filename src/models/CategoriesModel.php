@@ -35,11 +35,14 @@ class CategoriesModel extends BaseModel
                     JOIN category ON category.category_id = film_category.category_id
                     WHERE 1";
         
-        //Checks if the length filter was applied 
-        if(isset($filters['length']))
-        {
-            $sql .= " AND length >= :length ";
-            $query_values[":length"] = $filters['length']."%";
+        if (isset($filters["fromLength"])) {
+            $sql .= " AND length >= :from_Length ";
+            $query_values[":from_Length"] = $filters["fromLength"];
+        }
+
+        if (isset($filters["toLength"])) {
+            $sql .= " AND length <= :to_Length ";
+            $query_values[":to_Length"] = $filters["toLength"];
         }
 
         //Checks if the rating filter was applied
@@ -70,5 +73,16 @@ class CategoriesModel extends BaseModel
 
         //Returns the results of the query
         return $this->run($sql, [":category_id"=> $category_id])->fetch();
+    }
+
+    public function getCategory()
+    {   
+        //Gets the category based off of the ID given
+        $sql = "SELECT *
+                    FROM category
+                    ";
+
+        //Returns the results of the query
+        return $this->run($sql)->fetchAll();
     }
 }

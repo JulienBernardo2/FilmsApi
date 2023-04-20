@@ -65,9 +65,9 @@ class FilmsModel extends BaseModel
 
     public function getFilmById(int $film_id)
     {
-        $sql = "SELECT *
-                    FROM film
-                    WHERE film_id=:film_id";
+        $sql = "SELECT film.*
+                FROM film
+                WHERE film.film_id=:film_id";
         
         return $this->run($sql, [":film_id"=> $film_id])->fetch();
     }

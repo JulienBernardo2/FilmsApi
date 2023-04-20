@@ -53,17 +53,20 @@ class CategoriesController extends BaseController
         }
 
         // Define the allowed filter keys
-        $filters_allowed = ['length', 'rating', 'page', 'page_size'];
+        $filters_allowed = ['toLength', 'fromLength', 'rating', 'page', 'page_size'];
 
         //Checks if the filter keys are proper, if not throws an UnprocessableContent error
         $this->checkKeysFilter($filters, $filters_allowed, $request);
 
         //Defines the validation rules for the filters
         $rules = array(
-            'length' => [
+            'fromLength' => [
                 'integer',
-                ['min', 1],
-                ['max', 10000]
+                ['min', 1]
+            ],
+            'toLength' => [
+                'integer',
+                ['min', 1]
             ],
             'page' => [ 
                 'integer',
@@ -101,6 +104,16 @@ class CategoriesController extends BaseController
                 throw new HttpNoContentException($request);
             }
         }
+
+        //Prepares the response with the list of films
+        $response = $this->prepareResponse($response, $category_data, StatusCodeInterface::STATUS_OK);
+        return $response;        
+    }
+
+    public function handleGetAllCategory(Request $request, Response $response, array $uri_args)
+    {
+        //Gets the category data
+        $category_data = $this->categories_model->getCategory();
 
         //Prepares the response with the list of films
         $response = $this->prepareResponse($response, $category_data, StatusCodeInterface::STATUS_OK);

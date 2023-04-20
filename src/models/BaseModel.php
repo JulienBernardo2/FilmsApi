@@ -26,7 +26,7 @@ class BaseModel
      * Holds the number of records per page.
      * @var int
      */
-    private $records_per_page = 5;
+    private $records_per_page = 10;
 
     /**
      * Instantiates the BaseModel.
