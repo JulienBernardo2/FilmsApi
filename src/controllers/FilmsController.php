@@ -62,11 +62,11 @@ class FilmsController extends BaseController
 
         $films_data['films'] = $this->film_model->getAll($filters = $request->getQueryParams());
 
-        $tvmaze_controller = new TVMazeController();
-        $shows = $tvmaze_controller->handleGetAllShows();
-        $films_data["TVMaze_shows"] = $shows;
+        // $tvmaze_controller = new TVMazeController();
+        // $shows = $tvmaze_controller->handleGetAllShows();
+        // $films_data["TVMaze_shows"] = $shows;
         
-        if($films_data['films'] == null)
+        if($films_data['films']['data'] == null)
         {
             throw new HttpNoContentException($request);
         } 

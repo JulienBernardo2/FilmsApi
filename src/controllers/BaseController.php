@@ -33,6 +33,13 @@ class BaseController
         return $response->withStatus($statusCode)->withHeader("Content-Type", "application/json");
     }
 
+    function prepareResponseAuthentication(Response $response, $in_payload, $status_code) {
+        $payload = json_encode($in_payload);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', APP_MEDIA_TYPE_JSON)
+                        ->withStatus($status_code);
+    }
+
 
     /**
      * Checks that the keys in the given filters array are allowed and not empty.

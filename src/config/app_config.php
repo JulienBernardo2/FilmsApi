@@ -34,3 +34,5 @@ define('HTTP_NOT_FOUND', 404);
 define('APP_MEDIA_TYPE_JSON', "application/json");
 define('APP_MEDIA_TYPE_XML', "application/xml");
 define('APP_MEDIA_TYPE_YAML', "application/yaml");
+
+define('APP_LOG_DIR', APP_BASE_DIR.'/logs/');
